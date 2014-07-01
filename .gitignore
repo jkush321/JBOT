@@ -13,3 +13,6 @@ hs_err_pid*
 
 # Eclipse settings #
 .settings/
+
+# Bot config (should be created by program) #
+inv.txt
