@@ -1,14 +1,11 @@
-package notabot;
+package net.infacraft.jbot;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.FontFormatException;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionAdapter;
-import java.io.IOException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -79,9 +76,9 @@ public class RunningGUI {
 				try {
 					Thread.sleep(5000);
 				} catch (Exception e1) {}
-				Main.findInvSlots();
-				Main.frameTheSlots();
-				Main.waitForColorChange();})).start();
+				Bot.findInvSlots();
+				Bot.frameTheSlots();
+				Bot.waitForColorChange();})).start();
 		});
 	}
 	public static void setLabel(String s)
@@ -90,8 +87,8 @@ public class RunningGUI {
 	}
 	public static void setColor(Color c)
 	{
-		frame.getContentPane().setBackground(inverseColor(Main.pixelColor));
-		label.setForeground(Main.pixelColor);
+		frame.getContentPane().setBackground(inverseColor(Bot.pixelColor));
+		label.setForeground(Bot.pixelColor);
 	}
 	public static Color inverseColor(Color c)
 	{

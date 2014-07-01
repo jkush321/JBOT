@@ -1,4 +1,4 @@
-package notabot;
+package net.infacraft.jbot;
 
 import java.awt.Color;
 import java.awt.MouseInfo;
@@ -8,20 +8,13 @@ import java.awt.Robot;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import javax.imageio.ImageIO;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 
-public class Main {
+public class Bot {
 	public static Color pixelColor = new Color(0,0,0);
 	public static Color originalColor;
 	public static int pixelX,pixelY;
@@ -37,11 +30,13 @@ public class Main {
 	{
 		try {
 			b = new Robot();
-		} catch (Exception e) {}
-		start();
-	}
-	public static void start()
-	{
+		} catch (Exception e) {
+			System.out.println("JBOT has failed to create a Robot");
+			System.out.println("This stack trace may help find the problem");
+			e.printStackTrace();
+			System.exit(0);
+		}
+		
 		OptionsGUI.init();
 	}
 	public static void waitForColorChange()
@@ -55,9 +50,7 @@ public class Main {
 		
 		pixelX = MouseInfo.getPointerInfo().getLocation().x - 3;
 		pixelY = MouseInfo.getPointerInfo().getLocation().y;
-		
-		//highlight(pixelX,pixelY);
-		
+				
 		pixelColor = b.getPixelColor(pixelX, pixelY);
 		printColor(pixelColor);
 		originalColor = new Color(pixelColor.getRGB());
@@ -148,11 +141,11 @@ public class Main {
 		int height = maxY - minY;
 		
 		BufferedImage img = b.createScreenCapture(new Rectangle(minX,minY,width,height));
-		try {
-			ImageIO.write(img, "png", new File("test.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			ImageIO.write(img, "png", new File("test.png"));
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 		
 		for (int x = 0; x < width; x++)
 		{
@@ -171,13 +164,7 @@ public class Main {
 	}
 	public static void findInvSlots()
 	{
-//        int val = JOptionPane.showConfirmDialog (null, "Load saved config?","Load saved config?",JOptionPane.YES_NO_OPTION);
-//		if (val==JOptionPane.YES_OPTION)
-//		{
-//			
-//			GUI.setLabel("Can't find slot config!");
-//		}
-		if (loadSlots())
+		if (Config.loadSlots())
 			return;
 		List<JFrame> list = new ArrayList<JFrame>();
 		for (int i = 0; i < inventorySlotPos.length; i++)
@@ -222,95 +209,16 @@ public class Main {
 		{
 			f.setVisible(false);
 		}
-		JOptionPane.showMessageDialog(null, "Empty your inventory, turn off GUI transparency.", "First time set-up", JOptionPane.INFORMATION_MESSAGE);
-		JOptionPane.showMessageDialog(null, "MAKE SURE NOTHING IS BLOCKING YOUR INVENTORY SLOTS!", "First time set-up", JOptionPane.INFORMATION_MESSAGE);		
+		GUI.showAlert("Empty your inventory, turn off GUI transparency.");
+		GUI.showAlert("MAKE SURE NOTHING IS BLOCKING YOUR INVENTORY SLOTS!");		
 		RunningGUI.setLabel("Capturing pixels...");
 		for (int i = 0; i < inventorySlotPos.length; i++)
 		{
 			Point p = inventorySlotPos[i];
 			inventorySlotColor[i]=b.getPixelColor(p.x, p.y);
 		}
-		saveSlots();
+		Config.saveSlots();
 		RunningGUI.setLabel("Slots saved!");
-	}
-	
-	/*
-	 * 
-	 * List<JFrame> list = new ArrayList<JFrame>();
-		for (int i = 0; i < inventorySlotPos.length; i++)
-		{
-			int x = inventorySlotPos[i].x;
-			int y = inventorySlotPos[i].y;
-			
-			JFrame frame = new JFrame();
-			frame.setLocation(x-5,y-5);
-			frame.setSize(10,10);
-			frame.setUndecorated(true);
-			frame.setTitle("slot " + i + "");
-			frame.setAlwaysOnTop(true);
-			frame.getContentPane().setBackground((isEmptySlot(i)) ? Color.GREEN : Color.RED);
-			
-			frame.setVisible(true);
-			
-			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			
-			list.add(frame);
-		}
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-		}
-		for (JFrame f : list)
-		{
-			f.setVisible(false);
-		}
-	 * 
-	 */
-	public static boolean loadSlots()
-	{
-		File f = new File("inv.txt");
-		if (!f.exists())
-		{
-			return false;
-		}
-		try {
-			String content = new String(Files.readAllBytes(Paths.get("inv.txt")));
-			String cpairs[] = content.split(";");
-			for (int i = 0; i<cpairs.length; i++)
-			{
-				String[] cs = cpairs[i].split(",");
-				int x = Integer.parseInt(cs[0]);
-				int y = Integer.parseInt(cs[1]);
-				int red = Integer.parseInt(cs[2]);
-				int green = Integer.parseInt(cs[3]);
-				int blue = Integer.parseInt(cs[4]);
-				inventorySlotPos[i] = new Point(x,y);
-				inventorySlotColor[i] = new Color(red,green,blue);
-				System.out.println("Loaded slot " + i + " ("+x + "," + y+ ")");
-			}
-			return true;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return false;
-	}
-	public static void saveSlots()
-	{
-		String s = "";
-		
-		for (int i = 0; i < inventorySlotPos.length; i++)
-		{
-			if (i!=0) s+=";";
-			Point p = inventorySlotPos[i];
-			Color c = inventorySlotColor[i];
-			s+=p.x + "," + p.y + "," + c.getRed() + "," + c.getGreen() + "," + c.getBlue();
-		}
-		
-		try {
-			Files.write(Paths.get("inv.txt"), s.getBytes(), StandardOpenOption.CREATE);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 	public static void printColor(Color c)
 	{
@@ -475,8 +383,6 @@ public class Main {
 	}
 	public static int findColorDistance(int rgb1, int rgb2)
 	{
-//		System.out.println("Testing " + rgb1 + " " + rgb2);
-		
 		double r1 = (rgb1 >> 16) & 0xFF;
 		double g1 = (rgb1 >> 8) & 0xFF;
 		double b1 = (rgb1 >> 0) & 0xFF;
@@ -486,9 +392,7 @@ public class Main {
 		double b2 = (rgb2 >> 0) & 0xFF;
 		
 		double dis = Math.sqrt((Math.pow((r2-r1),2) + Math.pow((g2-g1),2) + Math.pow((b2-b1),2)));
-//		System.out.println(dis);
 		int ret = (int) Math.round(dis);
-//		System.out.println(ret);
 		return ret;
 	}
 	public static boolean isColorTolerated(int rgb1, int rgb2, int tolerance)
@@ -558,29 +462,30 @@ public class Main {
 		System.out.println("----------------------");
 		return isColorTolerated(pixelColor.getRGB(), originalColor.getRGB(), 5);
 	}
+	/**
+	 * Called when the inventory is detected to be full
+	 * 
+	 * @return Whether or not to halt operations
+	 */
 	public static boolean onFullInventory()
 	{
 		RunningGUI.setLabel("Inventory full!");
 		if (IFBRadioButton.getSelectedIFB()==InventoryFullBehavior.DROP_WHEN_FULL)
 		{
-			System.out.println("dropping");
 			dropAllItems();
 			return false;
 		}
 		else if (IFBRadioButton.getSelectedIFB()==InventoryFullBehavior.ALERT_WHEN_FULL)
 		{
-			System.out.println("alerting");
-			JOptionPane.showMessageDialog(null, "Your inventory is full!", "JBot", JOptionPane.INFORMATION_MESSAGE);
+			GUI.showAlert("Your inventory is full!");
 			return true;
 		}
 		else if (IFBRadioButton.getSelectedIFB()==InventoryFullBehavior.TP_WHEN_FULL)
 		{
-			System.out.println("teleporting");
 			teleportToLodestone(LSRadioButton.getSelectedLodestone());
-			JOptionPane.showMessageDialog(null, "Your inventory is full!", "JBot", JOptionPane.INFORMATION_MESSAGE);
+			GUI.showAlert("Your inventory is full!");
 			return true;
 		}
-		System.out.println("something is wrong");
 		return true;
 	}
 }

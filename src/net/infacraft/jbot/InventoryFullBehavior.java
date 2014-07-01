@@ -1,5 +1,5 @@
 
-package notabot;
+package net.infacraft.jbot;
 
 public enum InventoryFullBehavior {
 	DROP_WHEN_FULL,

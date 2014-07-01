@@ -1,4 +1,4 @@
-package notabot;
+package net.infacraft.jbot;
 
 import java.awt.event.KeyEvent;
 
