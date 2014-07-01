@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Random;
 
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 
 public class Bot {
 	public static Color pixelColor = new Color(0,0,0);
@@ -39,6 +40,34 @@ public class Bot {
 		
 		OptionsGUI.init();
 	}
+	
+	public static void normalStart()
+	{
+		SwingUtilities.invokeLater(() -> {
+			(new Thread(() -> {
+				try {
+					Thread.sleep(5000);
+				} catch (Exception e1) {}
+				Bot.findInvSlots();
+				Bot.frameTheSlots();
+				Bot.waitForColorChange();})).start();
+		});
+	}
+	public static void configStart()
+	{
+		SwingUtilities.invokeLater(() -> {
+			(new Thread(() -> {
+				try {
+					Thread.sleep(1000);
+				} catch (Exception e1) {}
+				Bot.findInvSlots();
+	    		RunningGUI.frame.setVisible(false);
+	    		RunningGUI.frame.dispose();
+	    		OptionsGUI.frame.setVisible(true);
+			})).start();
+		});
+	}
+	
 	public static void waitForColorChange()
 	{
 		RunningGUI.setLabel("Hello, 5 seconds to position mouse.");
@@ -164,6 +193,7 @@ public class Bot {
 	}
 	public static void findInvSlots()
 	{
+		System.out.println("Finding inventory slots...");
 		if (Config.loadSlots())
 			return;
 		List<JFrame> list = new ArrayList<JFrame>();

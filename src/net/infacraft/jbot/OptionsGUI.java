@@ -193,6 +193,7 @@ class OptionsFrame extends JFrame
 	    	{
 	    		close();
 	    		RunningGUI.init();
+	    		Bot.normalStart();
 	    	}
 	    });
 	    
@@ -203,12 +204,24 @@ class OptionsFrame extends JFrame
 	    		close();
 	    	}
 	    });
-	    
 	    btnAbout.addMouseListener(new MouseAdapter()
 	    {
 	    	public void mouseClicked(MouseEvent e)
 	    	{
-	    		// TODO this
+	    		setAlwaysOnTop(false);
+	    		GUI.showAlert(
+	    				"JBOT is a simple color based bot for Runescape.",
+	    				"Currently there have been no reported bans.",
+	    				"This is an InfaCraft project, check out our",
+	    				"website at InfaCraft.net for more information.",
+	    				"Pull requests are accepted and welcomed.",
+	    				"Remember to run this program in moderation,",
+	    				"never more than 8 hours a day and check on it",
+	    				"occasionally.",
+	    				"If you paid for JBOT get a refund. This is",
+	    				"freely available software.",
+	    				"Thank you for using JBOT!");
+	    		setAlwaysOnTop(true);
 	    	}
 	    });
 	    
@@ -216,7 +229,14 @@ class OptionsFrame extends JFrame
 	    {
 	    	public void mouseClicked(MouseEvent e)
 	    	{
-	    		// TODO this
+	    		setAlwaysOnTop(false);
+	    		GUI.showAlert(
+	    				"Donations can be sent directly through",
+	    				"Paypal to jkush321@yahoo.com, where they",
+	    				"will be manually divided between devs.",
+	    				"An automated system is coming soon,",
+	    				"Thank you for your kindness :)");
+	    		setAlwaysOnTop(true);
 	    	}
 	    });
 	    
@@ -224,7 +244,62 @@ class OptionsFrame extends JFrame
 	    {
 	    	public void mouseClicked(MouseEvent e)
 	    	{
-	    		// TODO this
+	    		setAlwaysOnTop(false);
+	    		GUI.showAlert(
+	    				"JBOT can be confusing to use the first time.",
+	    				"THIS TEXT BASED TUTORIAL CAN BE HARD TO",
+	    				"UNDERSTAND, OUR YOUTUBE TUTORIAL SHOULD BE",
+	    				"MUCH MORE HELPFUL.",
+	    				"YouTube channel URL: youtube.com/jkush321",
+	    				"You can also find the tutorial at InfaCraft.net",
+	    				"\nText based tutorial:",
+	    				"As a start, make sure Runescape is running ",
+	    				"(preferably at a low graphics setting)",
+	    				"Then, you should stand over the ore, tree,",
+	    				"or etc. that the bot will use...",
+	    				"IMPORTANT: EMPTY YOUR INVENTORY BEFORE",
+	    				"YOU CONTINUE!!!",
+	    				"Now, click the 'Config INV' button.",
+	    				"Put your mouse over the first slot of your",
+	    				"inventory, when a blue box appears that slot",
+	    				"has been saved.",
+	    				"Do this for all 28 slots... it will take a few",
+	    				"minutes, but it is worth the time.",
+	    				"After you choose your config, you can click GO.",
+	    				"Now, you have to properly position the mouse",
+	    				"over the ore in a rock, a tree (above where the",
+	    				"stump will appear). When the bot is ready, start",
+	    				"it by clicking the ore/tree/whatever. It will now",
+	    				"continue this action every time the color of the",
+	    				"pixel returns to the original color.",
+	    				"The bot will now click until inventory is full,",
+	    				"and then perform the action you chose at the",
+	    				"launch screen.",
+	    				"\nAgain, the video tutorial is much easier to use.",
+	    				"Thanks for using JBOT!");
+	    		setAlwaysOnTop(true);
+	    	}
+	    	
+	    });
+	    
+	    // inv buttons \\
+    	btnCheckINV.addMouseListener(new MouseAdapter()
+	    {
+	    	public void mouseClicked(MouseEvent e)
+	    	{
+	    		setVisible(false);
+	    		RunningGUI.init();
+	    		Bot.configStart();
+	    	}
+	    });
+    	btnCfgINV.addMouseListener(new MouseAdapter()
+	    {
+	    	public void mouseClicked(MouseEvent e)
+	    	{
+	    		setVisible(false);
+	    		Config.deleteSlots();
+	    		RunningGUI.init();
+	    		Bot.configStart();
 	    	}
 	    });
 	}

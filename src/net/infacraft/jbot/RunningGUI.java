@@ -11,7 +11,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.SwingUtilities;
 
 public class RunningGUI {
 	public static JFrame frame;
@@ -70,16 +69,6 @@ public class RunningGUI {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		frame.setVisible(true);
-		
-		SwingUtilities.invokeLater(() -> {
-			(new Thread(() -> {
-				try {
-					Thread.sleep(5000);
-				} catch (Exception e1) {}
-				Bot.findInvSlots();
-				Bot.frameTheSlots();
-				Bot.waitForColorChange();})).start();
-		});
 	}
 	public static void setLabel(String s)
 	{

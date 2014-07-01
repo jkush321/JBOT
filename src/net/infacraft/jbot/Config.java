@@ -56,4 +56,12 @@ public class Config {
 			e.printStackTrace();
 		}
 	}
+	public static void deleteSlots()
+	{
+		try {
+			Files.delete(Paths.get("inv.txt"));
+		} catch (IOException e) {
+			System.out.println("inv.txt didn't delete, but that means nothing.");
+		}
+	}
 }
