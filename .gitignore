@@ -16,3 +16,6 @@ hs_err_pid*
 
 # Bot config (should be created by program) #
 inv.txt
+
+# Bin is unneeded #
+bin/
