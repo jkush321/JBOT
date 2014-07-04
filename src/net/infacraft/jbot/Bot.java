@@ -67,6 +67,21 @@ public class Bot {
 			})).start();
 		});
 	}
+	public static void checkStart()
+	{
+		SwingUtilities.invokeLater(() -> {
+			(new Thread(() -> {
+				try {
+					Thread.sleep(1000);
+				} catch (Exception e1) {}
+				Bot.findInvSlots();
+				Bot.frameTheSlots();
+	    		RunningGUI.frame.setVisible(false);
+	    		RunningGUI.frame.dispose();
+	    		OptionsGUI.frame.setVisible(true);
+			})).start();
+		});
+	}
 	
 	public static void waitForColorChange()
 	{

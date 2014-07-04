@@ -289,7 +289,7 @@ class OptionsFrame extends JFrame
 	    	{
 	    		setVisible(false);
 	    		RunningGUI.init();
-	    		Bot.configStart();
+	    		Bot.checkStart();
 	    	}
 	    });
     	btnCfgINV.addMouseListener(new MouseAdapter()
